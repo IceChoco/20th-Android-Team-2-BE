@@ -1,21 +1,19 @@
 package yapp.bestFriend.model.dto.request.v1pt1.product;
 
-
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import yapp.bestFriend.model.entity.Product;
-import yapp.bestFriend.model.entity.User;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CreateProductRequest {
+public class UpdateProductRequest {
+
+    @NotNull
+    @ApiModelProperty(value = "수정하려는 절약(Product)의 product_id")
+    private Long productId;
 
     @NotBlank
     @ApiModelProperty(value = "절약 상품의 이름")
@@ -36,15 +34,4 @@ public class CreateProductRequest {
     @NotBlank
     @ApiModelProperty(value = "종료 일시")
     private String endYmd;
-
-    public Product toEntity(User user) {
-        return Product.builder()
-                .user(user)
-                .name(name)
-                .freqType(freqType)
-                .freqInterval(freqInterval)
-                .startYmd(startYmd)
-                .endYmd(endYmd)
-                .build();
-    }
 }
