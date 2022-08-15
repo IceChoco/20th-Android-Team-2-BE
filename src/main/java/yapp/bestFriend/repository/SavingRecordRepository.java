@@ -58,11 +58,11 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
                     "                ((select count(*)\n" +
                     "                 from Calendar \n" +
                     "                 where DE between B.startYmd and B.endYmd) - count(*))\n" +
-                    "            else ((select count(*)\n" +
+                    "            else (select count(*)\n" +
                     "                     from Calendar \n" +
                     "                    where DE between B.startYmd and B.endYmd\n" +
-                    "                      and DAY_NUM IN (:intervalList)) - count(*))\n" +
-                    "           end AS remainingTimes\n" +
+                    "                      and DAY_NUM IN (:intervalList)) \n" +
+                    "           end AS totalTimes\n" +
                     "    FROM SavingRecord A inner join Product B\n" +
                     "      on A.user.id = B.user.id\n" +
                     "       AND A.product.id = B.id\n" +
