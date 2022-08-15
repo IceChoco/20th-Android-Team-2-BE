@@ -15,6 +15,6 @@ public interface SavingRecordWithProductInterface {
     @ApiModelProperty(value = "누적 절약 횟수")
     Integer getAccmTimes();
 
-    @ApiModelProperty(value = "잔여 절약 횟수")
-    Integer getRemainingTimes();
+    @ApiModelProperty(value = "목표 기간 동안의 목표 절약 횟수")
+    Integer getTotalTimes();
 }

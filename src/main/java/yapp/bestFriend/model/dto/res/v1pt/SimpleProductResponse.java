@@ -31,6 +31,6 @@ public class SimpleProductResponse {
     @ApiModelProperty(value = "누적 절약 횟수")
     private Integer accmTimes;
 
-    @ApiModelProperty(value = "잔여 절약 횟수")
-    private Integer remainingTimes;
+    @ApiModelProperty(value = "목표 기간 동안의 목표 절약 횟수")
+    private Integer totalTimes;
 }

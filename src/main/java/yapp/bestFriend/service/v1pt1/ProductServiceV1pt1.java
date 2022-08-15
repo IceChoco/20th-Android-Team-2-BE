@@ -60,10 +60,10 @@ public class ProductServiceV1pt1 {
                         product.getProductId(),
                         product.getName(),
                         product.getPrice(),
-                        Integer.parseInt(product.getPrice())>0?true:false,
+                        Integer.parseInt(product.getPrice()) > 0,
                         LocalDate.now(),
                         product.getAccmTimes(),
-                        product.getRemainingTimes()));
+                        product.getTotalTimes()));
             }
 
             return DefaultRes.response(HttpStatus.OK.value(), "조회성공", SimpleProductResponseList);
@@ -84,7 +84,7 @@ public class ProductServiceV1pt1 {
     /**
      * 절약 항목을 수정
      * @param request 절약 항목 수정 요청
-     * @return
+     * @return 수정 성공 여부
      */
     public DefaultRes updateProduct(Long userId, UpdateProductRequest request) {
         Optional<User> user = userRepository.findById(userId);
