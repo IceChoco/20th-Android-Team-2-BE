@@ -56,6 +56,7 @@ public class ProductServiceV1pt1 {
             for(Product p:productList){
                 List<String> intervalList = Arrays.asList(p.getFreqInterval().split(","));
                 SavingRecordWithProductInterface product = savingRecordRepository.searchProductListWithSavingRecord(existingUser.getId(), LocalDateUtil.convertToLocalDate(recordYmd).toString(), p.getId(), intervalList);
+                if(product == null) continue;
                 SimpleProductResponseList.add(new yapp.bestFriend.model.dto.res.v1pt.SimpleProductResponse(
                         product.getProductId(),
                         product.getName(),

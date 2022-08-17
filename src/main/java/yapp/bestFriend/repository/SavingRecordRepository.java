@@ -63,15 +63,15 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
                     "                    where DE between B.startYmd and B.endYmd\n" +
                     "                      and DAY_NUM IN (:intervalList)) \n" +
                     "           end AS totalTimes\n" +
-                    "    FROM SavingRecord A inner join Product B\n" +
-                    "      on A.user.id = B.user.id\n" +
+                    "    FROM Product B LEFT OUTER JOIN SavingRecord A\n" +
+                    "      on (A.user.id = B.user.id\n" +
                     "       AND A.product.id = B.id\n" +
-                    "     where 1=1" +
-                    "AND A.user.id = :userId\n" +
-                    "AND A.product.id in (:productId)\n" +
                     "       AND A.recordYmd between B.startYmd AND B.endYmd\n" +
                     "       and substring(A.recordYmd,1,10) <= :recordYmd\n" +
-                    "       AND A.deletedYn = false\n" +
+                    "       AND A.deletedYn = false)\n" +
+                    "     where 1=1" +
+                    "AND B.user.id = :userId\n" +
+                    "AND B.id in (:productId)\n" +
                     "       AND B.deletedYn = false\n" +
                     "    group by B.id, B.name")
     SavingRecordWithProductInterface searchProductListWithSavingRecord(Long userId, String recordYmd, Long productId, List<String> intervalList);
