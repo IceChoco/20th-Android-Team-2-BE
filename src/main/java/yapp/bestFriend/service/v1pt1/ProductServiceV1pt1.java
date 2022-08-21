@@ -35,19 +35,21 @@ public class ProductServiceV1pt1 {
 
         // 해당 userId로 가입된 사용자가 존재하는 경우
         if(user.isPresent()){
-            try {
-                return getListDefaultRes(user.get(), recordYmd);
-            }catch (Exception e){
-                return DefaultRes.response(HttpStatus.OK.value(), "등록 실패(날짜 형식 오류)");
-            }
+            return getListDefaultRes(user.get(), recordYmd);
         }
         // 해당 userId로 가입된 사용자가 존재하지 않는 경우
         else return DefaultRes.response(HttpStatus.OK.value(), "조회 실패(사용자 정보 없음)");
     }
 
     private DefaultRes<List<yapp.bestFriend.model.dto.res.v1pt.SimpleProductResponse>> getListDefaultRes(User existingUser, String recordYmd) {
-        List<Product> productList = productRepository.findProductList(recordYmd, existingUser.getId(), LocalDateUtil.getDayOfWeek(recordYmd));
+        String dayNumber;
+        try {
+            dayNumber = LocalDateUtil.getDayOfWeek(recordYmd);
+        }catch (Exception e){
+            return DefaultRes.response(HttpStatus.OK.value(), "등록 실패(날짜 형식 오류)");
+        }
 
+        List<Product> productList = productRepository.findProductList(recordYmd, existingUser.getId(), dayNumber);
         if(productList.isEmpty()){
             return DefaultRes.response(HttpStatus.OK.value(), "데이터 없음");
         }
@@ -56,6 +58,7 @@ public class ProductServiceV1pt1 {
             for(Product p:productList){
                 List<String> intervalList = Arrays.asList(p.getFreqInterval().split(","));
                 SavingRecordWithProductInterface product = savingRecordRepository.searchProductListWithSavingRecord(existingUser.getId(), LocalDateUtil.convertToLocalDate(recordYmd).toString(), p.getId(), intervalList);
+                if(product == null) continue;
                 SimpleProductResponseList.add(new yapp.bestFriend.model.dto.res.v1pt.SimpleProductResponse(
                         product.getProductId(),
                         product.getName(),
