@@ -51,13 +51,13 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
     @Query(value =
             "    SELECT B.id as productId,\n" +
                     "           B.name as name,\n" +
-                    "           SUM(CASE WHEN substring(A.recordYmd,1,10) = :recordYmd THEN A.savings ELSE 0 END) AS price,\n" +
-                    "           count(*) AS accmTimes,\n" +
-                    "       case when B.freqType = 1 then (1-count(*))\n" +
+                    "           COALESCE(SUM(CASE WHEN substring(A.recordYmd,1,10) = :recordYmd THEN A.savings ELSE 0 END),0) AS price,\n" +
+                    "           count(A.id) AS accmTimes,\n" +
+                    "       case when B.freqType = 1 then (1-count(B.id))\n" +
                     "            WHEN B.freqType = 2 THEN\n" +
                     "                ((select count(*)\n" +
                     "                 from Calendar \n" +
-                    "                 where DE between B.startYmd and B.endYmd) - count(*))\n" +
+                    "                 where DE between B.startYmd and B.endYmd) - count(B.id))\n" +
                     "            else (select count(*)\n" +
                     "                     from Calendar \n" +
                     "                    where DE between B.startYmd and B.endYmd\n" +
@@ -67,7 +67,8 @@ public interface SavingRecordRepository extends JpaRepository<SavingRecord, Long
                     "      on (A.user.id = B.user.id\n" +
                     "       AND A.product.id = B.id\n" +
                     "       AND A.recordYmd between B.startYmd AND B.endYmd\n" +
-                    "       and substring(A.recordYmd,1,10) <= :recordYmd\n" +
+                    "       and substring(A.recordYmd,1,10) <= :recordYmd" +
+                    "       AND A.savings is not null \n" + //ver 1.1의 데이터만 가져오기 위함
                     "       AND A.deletedYn = false)\n" +
                     "     where 1=1" +
                     "AND B.user.id = :userId\n" +
